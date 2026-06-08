@@ -1,5 +1,7 @@
 # 퀵페이지 (QuickPage)
 
+> **QuickPage** — publish event and recruitment landing pages in 10 minutes, no code required.
+
 단기 마케팅·운영용 초간편 랜딩 빌더 — 10분 안에 배포하는 이벤트 페이지
 
 ## 기획 포트폴리오
@@ -35,11 +37,11 @@ npm run dev:clean   # 캐시 오류 시 권장
 | `/p/[id]` | 배포된 페이지 (UUID, 중복 없음) |
 | `/login` `/signup` | 로그인·회원가입 (Supabase) |
 
-## 2단계: 페이지 저장 & 배포
+## 페이지 저장 & 배포
 
 1. `/create`에서 페이지 편집
-2. **배포하기** 클릭 → `data/user-pages.json`에 저장 (데모 모드)
-3. `/p/{uuid}` 로 즉시 공개 (ID 자동 생성)
+2. **배포하기** 클릭 (Supabase 연동 시 로그인 필요)
+3. `/p/{uuid}` 로 즉시 공개
 4. `/dashboard`에서 보기·수정·삭제
 
 ### Supabase 연동 (선택)
@@ -65,3 +67,7 @@ npm run build
 ```
 
 Vercel 배포 시 환경변수에 Supabase 키를 설정하세요. 로컬 JSON 저장소는 Vercel에서 동작하지 않으므로 프로덕션에서는 Supabase가 필요합니다.
+
+## License
+
+MIT — see [LICENSE](./LICENSE)

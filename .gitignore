@@ -10,6 +10,7 @@
 
 # testing
 /coverage
+*.lcov
 
 # next.js
 /.next/
@@ -17,17 +18,20 @@
 
 # production
 /build
+/dist
 
 # uploaded images (keep folder)
 /public/uploads/*
 !/public/uploads/.gitkeep
 
-# local page storage (2단계 데모)
+# local page storage (demo mode)
 /data/user-pages.json
 
 # misc
 .DS_Store
 *.pem
+.vercel
+.vscode-test
 
 # debug
 npm-debug.log*
@@ -42,9 +46,8 @@ yarn-error.log*
 .env*.local
 .env.development
 .env.production
-
-# vercel
-.vercel
+.env.*
+!.env.example
 
 # typescript
 *.tsbuildinfo
