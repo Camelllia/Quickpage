@@ -1,13 +1,17 @@
 import { NextRequest, NextResponse } from "next/server";
-import { listPages, savePage } from "@/lib/pages-service";
+import { listPages, listTrashedPages, savePage } from "@/lib/pages-service";
+import { parseSavePageBody } from "@/lib/save-page-body";
 import { isSupabaseConfigured } from "@/lib/supabase/config";
 import { getSessionUser } from "@/lib/supabase/server";
-import type { PageData } from "@/lib/types";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const user = await getSessionUser();
-    const pages = await listPages(user?.id ?? null);
+    const workspaceId = req.nextUrl.searchParams.get("workspaceId");
+    const trash = req.nextUrl.searchParams.get("trash") === "true";
+    const pages = trash
+      ? await listTrashedPages(user?.id ?? null)
+      : await listPages(user?.id ?? null, workspaceId);
     return NextResponse.json({ pages });
   } catch (err) {
     return NextResponse.json(
@@ -19,16 +23,13 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = (await req.json()) as PageData;
-    if (!body.title?.trim()) {
-      return NextResponse.json({ error: "제목을 입력해주세요." }, { status: 400 });
-    }
+    const { data, workspaceId } = parseSavePageBody(await req.json());
 
     const user = await getSessionUser();
     if (isSupabaseConfigured() && !user) {
       return NextResponse.json({ error: "로그인이 필요합니다." }, { status: 401 });
     }
-    const record = await savePage(body, user?.id ?? null);
+    const record = await savePage(data, user?.id ?? null, undefined, workspaceId);
     return NextResponse.json({ page: record });
   } catch (err) {
     return NextResponse.json(

@@ -26,6 +26,8 @@
 
 # local page storage (demo mode)
 /data/user-pages.json
+/data/user-folders.json
+/data/user-workspaces.json
 
 # misc
 .DS_Store

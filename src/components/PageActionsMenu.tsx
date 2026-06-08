@@ -9,14 +9,17 @@ import { exportPageAsPng } from "@/lib/page-export-png";
 import {
   ChartIcon,
   DocumentIcon,
+  DuplicateIcon,
   EditIcon,
   ExternalLinkIcon,
   FolderIcon,
   InboxIcon,
   PhotoIcon,
+  SettingsIcon,
   TagIcon,
   TrashIcon,
 } from "@/components/icons/PageMenuIcons";
+import MoveToTrashModal from "@/components/MoveToTrashModal";
 import type { PageData, PageFolder } from "@/lib/types";
 
 interface PageActionsMenuProps {
@@ -28,6 +31,8 @@ interface PageActionsMenuProps {
   onRename?: () => void;
   onMoveToFolder?: (folderId: string | null) => void;
   onShowTrackingLogs?: () => void;
+  onDuplicate?: () => void | Promise<void>;
+  onOpenSettings?: () => void;
   onDelete?: () => void | Promise<void>;
   showEdit?: boolean;
   variant?: "overlay" | "header" | "sheet";
@@ -42,11 +47,14 @@ export default function PageActionsMenu({
   onRename,
   onMoveToFolder,
   onShowTrackingLogs,
+  onDuplicate,
+  onOpenSettings,
   onDelete,
   showEdit = true,
   variant = "overlay",
 }: PageActionsMenuProps) {
   const [open, setOpen] = useState(false);
+  const [trashConfirmOpen, setTrashConfirmOpen] = useState(false);
   const [exporting, setExporting] = useState<"html" | "png" | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
@@ -111,10 +119,14 @@ export default function PageActionsMenu({
     }
   };
 
-  const handleDelete = async () => {
+  const handleDeleteClick = () => {
     if (!onDelete) return;
-    if (!confirm("이 페이지를 삭제할까요?")) return;
     close();
+    setTrashConfirmOpen(true);
+  };
+
+  const handleTrashConfirm = async () => {
+    if (!onDelete) return;
     await onDelete();
   };
 
@@ -154,6 +166,18 @@ export default function PageActionsMenu({
             <button type="button" onClick={() => { close(); onShowTrackingLogs(); }} className={itemClass}>
               <ChartIcon />
               방문 로그
+            </button>
+          )}
+          {onDuplicate && (
+            <button type="button" onClick={() => { close(); void onDuplicate(); }} className={itemClass}>
+              <DuplicateIcon />
+              복제
+            </button>
+          )}
+          {onOpenSettings && (
+            <button type="button" onClick={() => { close(); onOpenSettings(); }} className={itemClass}>
+              <SettingsIcon />
+              공개 설정
             </button>
           )}
           {onMoveToFolder && (currentFolderId || folders.some((f) => f.id !== currentFolderId)) && (
@@ -197,7 +221,7 @@ export default function PageActionsMenu({
           <div className="my-1 border-t border-gray-100" />
           <button
             type="button"
-            onClick={handleDelete}
+            onClick={handleDeleteClick}
             className="flex w-full items-center gap-2.5 px-4 py-2.5 text-left text-sm text-red-500 hover:bg-red-50"
           >
             <TrashIcon />
@@ -243,6 +267,12 @@ export default function PageActionsMenu({
 
   return (
     <>
+      <MoveToTrashModal
+        open={trashConfirmOpen}
+        pageName={displayName ?? data.title}
+        onClose={() => setTrashConfirmOpen(false)}
+        onConfirm={handleTrashConfirm}
+      />
       <div ref={rootRef} className="relative">
         <button
           type="button"

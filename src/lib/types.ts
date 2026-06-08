@@ -57,9 +57,28 @@ export interface PageData {
   customCss: string;
 }
 
+export type WorkspaceRole = "owner" | "admin" | "member";
+
+export interface Workspace {
+  id: string;
+  name: string;
+  ownerId: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface WorkspaceMember {
+  id: string;
+  workspaceId: string;
+  userId: string | null;
+  role: WorkspaceRole;
+  createdAt: string;
+}
+
 export interface PageFolder {
   id: string;
   userId: string | null;
+  workspaceId: string | null;
   name: string;
   createdAt: string;
   updatedAt: string;
@@ -68,11 +87,14 @@ export interface PageFolder {
 export interface SavedPageRecord {
   id: string;
   userId: string | null;
+  workspaceId: string | null;
   name: string;
   folderId: string | null;
   starred: boolean;
   data: PageData;
   published: boolean;
+  expiresAt: string | null;
+  deletedAt: string | null;
   createdAt: string;
   updatedAt: string;
 }
@@ -81,7 +103,11 @@ export interface PageMetaUpdate {
   name?: string;
   folderId?: string | null;
   starred?: boolean;
+  published?: boolean;
+  expiresAt?: string | null;
 }
+
+export type PagePublicStatus = "available" | "not_found" | "unpublished" | "expired";
 
 export interface PageTrackingEvent {
   id: string;

@@ -2,10 +2,11 @@ import { NextRequest, NextResponse } from "next/server";
 import { createFolder, listFolders } from "@/lib/folders-service";
 import { getSessionUser } from "@/lib/supabase/server";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
     const user = await getSessionUser();
-    const folders = await listFolders(user?.id ?? null);
+    const workspaceId = req.nextUrl.searchParams.get("workspaceId");
+    const folders = await listFolders(user?.id ?? null, workspaceId);
     return NextResponse.json({ folders });
   } catch (err) {
     return NextResponse.json(
@@ -17,14 +18,14 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = (await req.json()) as { name?: string };
+    const body = (await req.json()) as { name?: string; workspaceId?: string };
     const name = body.name?.trim();
     if (!name) {
       return NextResponse.json({ error: "폴더 이름을 입력해주세요." }, { status: 400 });
     }
 
     const user = await getSessionUser();
-    const folder = await createFolder(name, user?.id ?? null);
+    const folder = await createFolder(name, user?.id ?? null, body.workspaceId);
     return NextResponse.json({ folder });
   } catch (err) {
     return NextResponse.json(

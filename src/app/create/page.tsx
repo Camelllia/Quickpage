@@ -16,6 +16,7 @@ import LoginPromptModal from "@/components/LoginPromptModal";
 import PageActionsMenu from "@/components/PageActionsMenu";
 import { getTemplateById, getTemplatePreset } from "@/lib/data";
 import { useSessionUser } from "@/hooks/useSessionUser";
+import { getActiveScopeId } from "@/lib/active-workspace";
 import { applyLayout } from "@/lib/layouts";
 import type { LayoutId, PageData } from "@/lib/types";
 
@@ -137,7 +138,7 @@ function CreateEditor() {
       const res = await fetch(url, {
         method,
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
+        body: JSON.stringify({ data, workspaceId: getActiveScopeId() }),
       });
       const json = await res.json();
       if (res.status === 401) {

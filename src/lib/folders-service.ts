@@ -5,6 +5,9 @@ import {
   localUpdateFolder,
 } from "./local-folders-store";
 import { localClearFolder } from "./local-pages-store";
+import { assertWorkspaceAccess } from "./workspaces-service";
+import { PERSONAL_SCOPE_ID } from "./active-workspace";
+import { isPersonalScopeParam } from "./workspace-scope";
 import { createClient } from "./supabase/server";
 import { isSupabaseConfigured } from "./supabase/config";
 import { formatSupabaseError } from "./supabase/errors";
@@ -17,6 +20,7 @@ function throwIfError(error: { message: string } | null): void {
 function mapRow(row: {
   id: string;
   user_id: string | null;
+  workspace_id: string | null;
   name: string;
   created_at: string;
   updated_at: string;
@@ -24,37 +28,67 @@ function mapRow(row: {
   return {
     id: row.id,
     userId: row.user_id,
+    workspaceId: row.workspace_id,
     name: row.name,
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
 }
 
-export async function listFolders(userId?: string | null): Promise<PageFolder[]> {
+export async function listFolders(
+  userId?: string | null,
+  workspaceId?: string | null,
+): Promise<PageFolder[]> {
+  const personal = isPersonalScopeParam(workspaceId);
+  const localScope = personal ? PERSONAL_SCOPE_ID : workspaceId;
+
   if (isSupabaseConfigured()) {
     const supabase = await createClient();
     let query = supabase.from("folders").select("*").order("name", { ascending: true });
     if (userId) query = query.eq("user_id", userId);
+    if (personal) {
+      query = query.is("workspace_id", null);
+    } else if (workspaceId) {
+      query = query.eq("workspace_id", workspaceId);
+    }
     const { data, error } = await query;
     throwIfError(error);
     return (data ?? []).map(mapRow);
   }
-  return localListFolders(userId);
+  return localListFolders(userId, localScope);
 }
 
-export async function createFolder(name: string, userId: string | null): Promise<PageFolder> {
+export async function createFolder(
+  name: string,
+  userId: string | null,
+  workspaceId?: string | null,
+): Promise<PageFolder> {
   if (isSupabaseConfigured()) {
     const supabase = await createClient();
     const now = new Date().toISOString();
+    let targetWorkspaceId: string | null = null;
+    if (workspaceId && !isPersonalScopeParam(workspaceId)) {
+      await assertWorkspaceAccess(workspaceId, userId);
+      targetWorkspaceId = workspaceId;
+    }
+
     const { data, error } = await supabase
       .from("folders")
-      .insert({ user_id: userId, name, created_at: now, updated_at: now })
+      .insert({
+        user_id: userId,
+        workspace_id: targetWorkspaceId,
+        name,
+        created_at: now,
+        updated_at: now,
+      })
       .select()
       .single();
     throwIfError(error);
     return mapRow(data);
   }
-  return localCreateFolder(name, userId);
+  const localScope =
+    workspaceId && !isPersonalScopeParam(workspaceId) ? workspaceId : null;
+  return localCreateFolder(name, userId, localScope);
 }
 
 export async function updateFolder(

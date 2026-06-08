@@ -15,7 +15,13 @@ export async function PATCH(
     }
 
     const body = (await req.json()) as PageMetaUpdate;
-    if (body.name === undefined && body.folderId === undefined && body.starred === undefined) {
+    if (
+      body.name === undefined &&
+      body.folderId === undefined &&
+      body.starred === undefined &&
+      body.published === undefined &&
+      body.expiresAt === undefined
+    ) {
       return NextResponse.json({ error: "수정할 항목이 없습니다." }, { status: 400 });
     }
 
