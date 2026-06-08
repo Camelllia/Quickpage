@@ -1,0 +1,35 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { isSupabaseConfigured } from "@/lib/supabase/config";
+import type { User } from "@supabase/supabase-js";
+
+export function useSessionUser() {
+  const authRequired = isSupabaseConfigured();
+  const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState(authRequired);
+
+  useEffect(() => {
+    if (!authRequired) {
+      setLoading(false);
+      return;
+    }
+
+    const supabase = createClient();
+    supabase.auth.getUser().then(({ data }) => {
+      setUser(data.user);
+      setLoading(false);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, [authRequired]);
+
+  return { user, loading, authRequired };
+}

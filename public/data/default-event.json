@@ -1,0 +1,35 @@
+{
+  "slug": "spring-event",
+  "templateId": "event-classic",
+  "title": "봄맞이 특별 이벤트",
+  "subtitle": "지금 신청하면 선착순 100명에게 특별 혜택!",
+  "bannerUrl": "https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=1200&h=600&fit=crop",
+  "bannerHeight": "md",
+  "bannerFocusY": 50,
+  "bannerFit": "cover",
+  "eventDate": "2026년 4월 15일 (토) 14:00",
+  "eventLocation": "서울 강남구 이벤트홀 3층",
+  "description": "따뜻한 봄을 맞이하여 특별한 이벤트를 준비했습니다. 다양한 체험 프로그램과 푸짐한 경품이 기다리고 있어요.",
+  "featuresTitle": "이벤트 혜택",
+  "ctaText": "무료 참가 신청하기",
+  "ctaUrl": "#apply",
+  "accentColor": "#f43f5e",
+  "backgroundColor": "#ffffff",
+  "textAlign": "left",
+  "titleSize": "md",
+  "ctaStyle": "filled",
+  "ctaSize": "md",
+  "sections": {
+    "showEventDate": true,
+    "showEventLocation": true,
+    "showDescription": true,
+    "showFeatures": true,
+    "showCta": true
+  },
+  "customCss": "",
+  "features": [
+    "선착순 100명 특별 굿즈 증정",
+    "현장 추첨 경품 (최대 50만원)",
+    "전문가 특강 무료 참관"
+  ]
+}
