@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quickpage — PM 포트폴리오</title>
+  <style>
+    :root {
+      --bg: #fff9e6;
+      --bg-slide: #fffef5;
+      --bg-card: #fff4cc;
+      --bg-card-alt: #ffffff;
+      --accent: #e8a800;
+      --accent-dark: #b8860b;
+      --accent-soft: #fff0a8;
+      --text: #1c1917;
+      --text-secondary: #57534e;
+      --text-muted: #78716c;
+      --border: #f0e6b8;
+      --implemented: #16a34a;
+      --designed: #d97706;
+      --future: #94a3b8;
+      --slide-w: min(1120px, 96vw);
+      --slide-ratio: 9 / 16;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html, body {
+      height: 100%;
+      font-family: "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow: hidden;
+    }
+
+    /* ── Deck shell ── */
+    .deck {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .slide-viewport {
+      width: var(--slide-w);
+      aspect-ratio: 16 / 9;
+      max-height: calc(100vh - 80px);
+      position: relative;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: var(--bg-slide);
+      box-shadow: 0 4px 24px rgba(180, 140, 0, 0.08);
+    }
+
+    .slide {
+      position: absolute;
+      inset: 0;
+      padding: 48px 56px;
+      display: none;
+      flex-direction: column;
+      opacity: 0;
+      transform: translateX(24px);
+      transition: opacity 0.35s ease, transform 0.35s ease;
+      overflow-y: auto;
+    }
+
+    .slide.active {
+      display: flex;
+      opacity: 1;
+      transform: translateX(0);
+    }
+
+    /* ── Typography ── */
+    .slide-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent-dark);
+      margin-bottom: 10px;
+    }
+
+    h1 {
+      font-size: clamp(28px, 3.2vw, 40px);
+      font-weight: 800;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+    }
+
+    h2 {
+      font-size: clamp(22px, 2.4vw, 30px);
+      font-weight: 800;
+      line-height: 1.25;
+      letter-spacing: -0.02em;
+      margin-bottom: 20px;
+    }
+
+    h3 {
+      font-size: 15px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    .subtitle {
+      font-size: clamp(15px, 1.6vw, 18px);
+      color: var(--text-secondary);
+      line-height: 1.55;
+      margin-top: 12px;
+    }
+
+    .lead {
+      font-size: clamp(16px, 1.8vw, 20px);
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+
+    .highlight {
+      color: var(--accent-dark);
+      font-weight: 700;
+    }
+
+    /* ── Layout helpers ── */
+    .flex-1 { flex: 1; }
+    .mt-auto { margin-top: auto; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+    .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+    .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+
+    /* ── Cards ── */
+    .card {
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+    }
+
+    .card.accent {
+      background: var(--bg-card);
+      border-color: #e8d48a;
+    }
+
+    .card p, .card li {
+      font-size: 13px;
+      line-height: 1.55;
+      color: var(--text-secondary);
+    }
+
+    .card ul { padding-left: 16px; margin-top: 6px; }
+    .card li + li { margin-top: 4px; }
+
+    .card .tag {
+      display: inline-block;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-bottom: 8px;
+    }
+
+    .tag-green { background: #dcfce7; color: #166534; }
+    .tag-amber { background: #fef3c7; color: #92400e; }
+    .tag-gray { background: #f1f5f9; color: #64748b; }
+
+    /* ── Tables ── */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 12.5px;
+    }
+
+    th, td {
+      padding: 9px 12px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+
+    th {
+      background: var(--bg-card);
+      font-weight: 700;
+      font-size: 11px;
+      color: var(--accent-dark);
+      letter-spacing: 0.04em;
+    }
+
+    td { color: var(--text-secondary); line-height: 1.45; }
+
+    /* ── Cover slide ── */
+    .slide-cover {
+      justify-content: center;
+      align-items: flex-start;
+      background: linear-gradient(135deg, #fffef5 60%, #fff4cc 100%);
+    }
+
+    .slide-cover .brand {
+      font-size: 52px;
+      font-weight: 900;
+      letter-spacing: -0.03em;
+    }
+
+    .slide-cover .brand span { color: var(--accent-dark); }
+
+    .slide-cover .meta {
+      margin-top: 32px;
+      font-size: 14px;
+      color: var(--text-muted);
+      line-height: 1.8;
+    }
+
+    .cover-badge {
+      display: inline-block;
+      margin-top: 24px;
+      padding: 6px 14px;
+      background: var(--accent-soft);
+      border: 1px solid #e8d48a;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent-dark);
+    }
+
+    /* ── Quote / callout ── */
+    .quote {
+      border-left: 4px solid var(--accent);
+      padding: 14px 20px;
+      background: var(--bg-card);
+      border-radius: 0 8px 8px 0;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    /* ── Flow / funnel ── */
+    .flow {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 12px;
+    }
+
+    .flow-step {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .flow-step.primary {
+      background: var(--accent-soft);
+      border-color: #e8d48a;
+      color: var(--accent-dark);
+    }
+
+    .flow-arrow {
+      color: var(--accent);
+      font-size: 14px;
+      font-weight: 700;
+    }
+
+    /* ── IA tree ── */
+    .ia-group { margin-bottom: 14px; }
+    .ia-group-title {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--accent-dark);
+      letter-spacing: 0.06em;
+      margin-bottom: 6px;
+    }
+    .ia-items {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .ia-item {
+      font-size: 12px;
+      padding: 5px 10px;
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      color: var(--text-secondary);
+    }
+    .ia-item strong { color: var(--text); font-weight: 600; }
+
+    /* ── Positioning chart ── */
+    .position-chart {
+      position: relative;
+      width: 100%;
+      height: 220px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: var(--bg-card-alt);
+      margin-top: 8px;
+    }
+
+    .position-chart .axis-x,
+    .position-chart .axis-y {
+      position: absolute;
+      background: var(--border);
+    }
+    .position-chart .axis-x { left: 10%; right: 10%; top: 50%; height: 1px; }
+    .position-chart .axis-y { top: 10%; bottom: 10%; left: 50%; width: 1px; }
+
+    .position-chart .label {
+      position: absolute;
+      font-size: 10px;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .position-dot {
+      position: absolute;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 8px;
+      border-radius: 6px;
+      white-space: nowrap;
+    }
+
+    .position-dot.star {
+      background: var(--accent-soft);
+      border: 2px solid var(--accent);
+      color: var(--accent-dark);
+    }
+
+    .position-dot.other {
+      background: #f5f5f4;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      font-weight: 500;
+    }
+
+    /* ── Roadmap timeline ── */
+    .timeline {
+      display: flex;
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .phase {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: 1px solid var(--border);
+      background: var(--bg-card-alt);
+      text-align: center;
+    }
+
+    .phase.done { background: #fef9c3; border-color: #e8d48a; }
+    .phase.planned { background: #fff7ed; border-color: #fed7aa; }
+    .phase.future { background: #f8fafc; border-color: #e2e8f0; opacity: 0.85; }
+
+    .phase-num { font-size: 10px; font-weight: 700; color: var(--text-muted); }
+    .phase-title { font-size: 12px; font-weight: 700; margin: 4px 0; }
+    .phase-status { font-size: 10px; color: var(--text-muted); }
+
+    /* ── Closing ── */
+    .slide-closing {
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      background: linear-gradient(135deg, #fffef5 40%, #fff4cc 100%);
+    }
+
+    .slide-closing h1 { font-size: 36px; }
+    .slide-closing .links {
+      margin-top: 28px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .slide-closing .link-item {
+      font-size: 13px;
+      padding: 8px 16px;
+      background: var(--bg-card-alt);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-secondary);
+    }
+
+    /* ── Nav controls ── */
+    .nav-bar {
+      position: fixed;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: rgba(255, 254, 245, 0.95);
+      border: 1px solid var(--border);
+      border-radius: 40px;
+      padding: 8px 20px;
+      backdrop-filter: blur(8px);
+      z-index: 100;
+    }
+
+    .nav-btn {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      background: var(--bg-card-alt);
+      cursor: pointer;
+      font-size: 16px;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.15s;
+    }
+
+    .nav-btn:hover { background: var(--bg-card); }
+    .nav-btn:disabled { opacity: 0.3; cursor: default; }
+
+    .slide-counter {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text-muted);
+      min-width: 56px;
+      text-align: center;
+    }
+
+    .progress-track {
+      position: fixed;
+      top: 0;
+      left: 0;
+      height: 3px;
+      background: var(--accent);
+      transition: width 0.35s ease;
+      z-index: 100;
+    }
+
+    .kbd-hint {
+      position: fixed;
+      top: 16px;
+      right: 20px;
+      font-size: 11px;
+      color: var(--text-muted);
+      z-index: 100;
+    }
+
+    kbd {
+      display: inline-block;
+      padding: 1px 6px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--bg-card-alt);
+      font-size: 10px;
+      font-family: inherit;
+    }
+
+    @media (max-width: 768px) {
+      .slide { padding: 28px 24px; }
+      .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+      .timeline { flex-direction: column; }
+      .kbd-hint { display: none; }
+    }
+
+    @media print {
+      html, body { overflow: visible; background: white; }
+      .deck { height: auto; display: block; }
+      .slide-viewport { width: 100%; max-height: none; aspect-ratio: auto; border: none; box-shadow: none; }
+      .slide {
+        display: flex !important;
+        position: relative;
+        opacity: 1 !important;
+        transform: none !important;
+        page-break-after: always;
+        min-height: 100vh;
+      }
+      .nav-bar, .progress-track, .kbd-hint { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="progress-track" id="progress"></div>
+<div class="kbd-hint"><kbd>←</kbd> <kbd>→</kbd> 또는 <kbd>Space</kbd>로 이동</div>
+
+<div class="deck">
+  <div class="slide-viewport" id="viewport">
+
+    <!-- 01 Cover -->
+    <section class="slide slide-cover active" data-slide="1">
+      <div class="cover-badge">Product Planner Portfolio</div>
+      <div class="brand">Quick<span>page</span></div>
+      <p class="subtitle" style="margin-top:16px; max-width:560px;">
+        개발자·디자인 툴 없이 10분 안에<br />
+        이벤트·모집 랜딩 페이지를 만들고 배포하는 초간편 빌더
+      </p>
+      <div class="meta">
+        기획 · 가설 검증 · 동작 프로토타입<br />
+        2026 · PM 포트폴리오
+      </div>
+    </section>
+
+    <!-- 02 Overview -->
+    <section class="slide" data-slide="2">
+      <div class="slide-label">Overview</div>
+      <h2>프로젝트 개요</h2>
+      <div class="grid-2 flex-1">
+        <div class="card accent">
+          <h3>무엇을 했나</h3>
+          <ul>
+            <li>문제 정의 → PRD → IA → MVP 범위 설정</li>
+            <li>Golden Path 동작 프로토타입 구현</li>
+            <li>로드맵·지표·경쟁분석·회고 문서화</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>포트폴리오 메시지</h3>
+          <ul>
+            <li><strong>문제</strong> — 이벤트 페이지는 자주·빨리 만들어야 함</li>
+            <li><strong>솔루션</strong> — 템플릿 + 폼 편집으로 10분 배포</li>
+            <li><strong>검증</strong> — 만들기→배포→트래킹 end-to-end</li>
+            <li><strong>범위 관리</strong> — 수익화·B2B는 기획만, 코드 제외</li>
+          </ul>
+        </div>
+      </div>
+      <div class="quote mt-auto" style="margin-top:20px;">
+        「얼마나 많이 만들었나」보다 「왜 이것만 만들고 나머지는 왜 안 만들었나」를 보여주는 것이 이 프로젝트의 가치다.
+      </div>
+    </section>
+
+    <!-- 03 Problem -->
+    <section class="slide" data-slide="3">
+      <div class="slide-label">Problem</div>
+      <h2>왜 이 제품인가</h2>
+      <p class="lead" style="margin-bottom:20px;">
+        이벤트·모집·세일·공지 페이지는 <span class="highlight">수명이 짧고 반복 제작</span>이 많다.
+        그런데 실무에서는 —
+      </p>
+      <div class="grid-3 flex-1">
+        <div class="card">
+          <h3>외주·개발 요청</h3>
+          <p>며칠~수주 소요.<br />긴급 이벤트에 맞지 않음.</p>
+        </div>
+        <div class="card">
+          <h3>미리캔버스·피그마</h3>
+          <p>디자인은 되지만<br />배포·트래킹·수정이 분리됨.</p>
+        </div>
+        <div class="card">
+          <h3>노션·구글사이트</h3>
+          <p>빠르지만<br />랜딩·전환(CTA)에 최적화되지 않음.</p>
+        </div>
+      </div>
+      <div class="quote mt-auto">
+        → <strong>빨리 만들고, 바로 공유하고, 효과를 보고, 다음에 또 빠르게</strong> 할 도구가 필요하다.
+      </div>
+    </section>
+
+    <!-- 04 Solution -->
+    <section class="slide" data-slide="4">
+      <div class="slide-label">Solution</div>
+      <h2>솔루션 & 포지셔닝</h2>
+      <p class="lead" style="margin-bottom:24px;">
+        <span class="highlight">「이벤트·모집 랜딩을 10분에 배포」</span>에만 집중한 초경량 빌더
+      </p>
+      <div class="grid-2 flex-1">
+        <div>
+          <h3>핵심 가치</h3>
+          <div class="card accent" style="margin-bottom:12px;">
+            <p><strong>속도</strong> — 템플릿 선택 후 폼 편집만으로 완성</p>
+          </div>
+          <div class="card accent" style="margin-bottom:12px;">
+            <p><strong>배포</strong> — 클릭 한 번으로 <code>/p/{id}</code> 공개 URL</p>
+          </div>
+          <div class="card accent">
+            <p><strong>트래킹</strong> — UTM 링크 생성 + 방문 분석 대시보드</p>
+          </div>
+        </div>
+        <div>
+          <h3>2×2 포지셔닝</h3>
+          <div class="position-chart">
+            <div class="axis-x"></div>
+            <div class="axis-y"></div>
+            <span class="label" style="top:8px; left:50%; transform:translateX(-50%);">높은 커스터마이즈</span>
+            <span class="label" style="bottom:8px; left:50%; transform:translateX(-50%);">낮은 커스터마이즈</span>
+            <span class="label" style="left:12px; top:50%; transform:translateY(-50%);">느린 제작</span>
+            <span class="label" style="right:12px; top:50%; transform:translateY(-50%);">빠른 제작</span>
+            <span class="position-dot other" style="top:18%; left:22%;">Webflow</span>
+            <span class="position-dot other" style="top:18%; right:18%;">외주</span>
+            <span class="position-dot other" style="bottom:18%; left:18%;">미리캔버스</span>
+            <span class="position-dot star" style="bottom:22%; right:20%;">★ Quickpage</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 Target -->
+    <section class="slide" data-slide="5">
+      <div class="slide-label">Target User</div>
+      <h2>타겟 사용자</h2>
+      <div class="grid-2 flex-1">
+        <div>
+          <h3>Primary</h3>
+          <table style="margin-top:8px;">
+            <thead><tr><th>페르소나</th><th>니즈</th><th>시나리오</th></tr></thead>
+            <tbody>
+              <tr>
+                <td><strong>마케터</strong></td>
+                <td>캠페인별 랜딩, 채널별 UTM</td>
+                <td>인스타·뉴스레터 → 방문 분석</td>
+              </tr>
+              <tr>
+                <td><strong>운영 담당자</strong></td>
+                <td>이벤트·공지 빠른 게시</td>
+                <td>행사 안내 당일 수정·재배포</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h3>Secondary</h3>
+          <div class="card" style="margin-bottom:10px;">
+            <p><strong>소상공인 / 학원 강사</strong><br />간단한 모집·오픈 안내</p>
+          </div>
+          <div class="card">
+            <p><strong>스타트업 운영자</strong><br />런칭·베타 모집 페이지</p>
+          </div>
+          <h3 style="margin-top:16px;">시나리오 A — 마케터</h3>
+          <div class="flow">
+            <span class="flow-step">템플릿 선택</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">편집·미리보기</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step primary">배포</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">UTM 공유</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">방문 로그</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 06 Hypothesis -->
+    <section class="slide" data-slide="6">
+      <div class="slide-label">Hypothesis</div>
+      <h2>핵심 가설</h2>
+      <table class="flex-1" style="margin-top:8px;">
+        <thead>
+          <tr><th>ID</th><th>가설</th><th>검증 방법</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>H1</strong></td>
+            <td>비개발 직군도 템플릿만으로 10분 내 페이지를 배포할 수 있다</td>
+            <td>편집기 Golden Path + 사용성 테스트</td>
+          </tr>
+          <tr>
+            <td><strong>H2</strong></td>
+            <td>UTM 트래킹·방문 로그가 마케터에게 가치 있다</td>
+            <td>트래킹 링크 생성·대시보드 제공</td>
+          </tr>
+          <tr>
+            <td><strong>H3</strong></td>
+            <td>무료→유료 전환은 워터마크 제거·분석·도메인으로 가능하다</td>
+            <td>요금제 설계 + (향후) 결제 연동</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="card accent mt-auto" style="margin-top:16px;">
+        <p><strong>North Star Metric</strong> — 주간 활성 배포 페이지 수 (Weekly Published Pages)<br />
+        가입·매출보다 먼저 <strong>배포 행동</strong>을 본다.</p>
+      </div>
+    </section>
+
+    <!-- 07 IA -->
+    <section class="slide" data-slide="7">
+      <div class="slide-label">Information Architecture</div>
+      <h2>정보 구조 (IA)</h2>
+      <div class="grid-2 flex-1">
+        <div>
+          <div class="ia-group">
+            <div class="ia-group-title">마케팅</div>
+            <div class="ia-items">
+              <span class="ia-item"><strong>/</strong> 랜딩</span>
+              <span class="ia-item"><strong>/templates</strong> 템플릿</span>
+              <span class="ia-item"><strong>/pricing</strong> 요금제</span>
+              <span class="ia-item"><strong>/login</strong> 인증</span>
+            </div>
+          </div>
+          <div class="ia-group">
+            <div class="ia-group-title">제품</div>
+            <div class="ia-items">
+              <span class="ia-item"><strong>/create</strong> 편집·배포</span>
+              <span class="ia-item"><strong>/dashboard</strong> 관리</span>
+              <span class="ia-item"><strong>/p/[id]</strong> 공개 페이지</span>
+            </div>
+          </div>
+          <div class="ia-group">
+            <div class="ia-group-title">법적·정책 (Footer)</div>
+            <div class="ia-items">
+              <span class="ia-item"><strong>/terms</strong> 이용 약관</span>
+              <span class="ia-item"><strong>/privacy</strong> 개인정보</span>
+              <span class="ia-item"><strong>/guidelines</strong> 운영 정책</span>
+            </div>
+          </div>
+        </div>
+        <div>
+          <h3>Golden Path</h3>
+          <div class="flow" style="margin-bottom:20px;">
+            <span class="flow-step">/</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">/templates</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step primary">/create</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step primary">배포</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">/p/{id}</span>
+            <span class="flow-arrow">→</span>
+            <span class="flow-step">방문 로그</span>
+          </div>
+          <h3>접근 권한</h3>
+          <table>
+            <thead><tr><th>구분</th><th>접근</th><th>목적</th></tr></thead>
+            <tbody>
+              <tr><td>마케팅·약관</td><td>비로그인</td><td>유입·전환·고지</td></tr>
+              <tr><td>제품</td><td>로그인 필수(배포)</td><td>제작·관리·배포</td></tr>
+              <tr><td>공개 페이지</td><td>누구나</td><td>이벤트 랜딩 열람</td></tr>
+            </tbody>
+          </table>
+          <p style="font-size:12px; color:var(--text-muted); margin-top:12px;">
+            IA 깊이: 핵심 화면은 기능 단위 · 약관·정책은 페이지 단위
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 08 MVP Scope -->
+    <section class="slide" data-slide="8">
+      <div class="slide-label">MVP Scope</div>
+      <h2>제품 범위 — In Scope ✅</h2>
+      <div class="grid-3 flex-1" style="margin-top:8px;">
+        <div class="card"><span class="tag tag-green">구현 완료</span><h3>템플릿·편집</h3><ul><li>6종 프리셋</li><li>레이아웃 6종</li><li>배너·혜택·CTA</li><li>MO/PC 미리보기</li></ul></div>
+        <div class="card"><span class="tag tag-green">구현 완료</span><h3>배포·관리</h3><ul><li>/p/{id} 공개 URL</li><li>대시보드 CRUD</li><li>폴더·휴지통</li><li>로그인 유도 모달</li></ul></div>
+        <div class="card"><span class="tag tag-green">구현 완료</span><h3>분석·기타</h3><ul><li>UTM 방문 기록</li><li>트래킹 링크</li><li>HTML·PNG 추출</li><li>약관·정책 3종</li></ul></div>
+      </div>
+      <h3 style="margin-top:16px;">Out of Scope — Phase 2 📐🔮</h3>
+      <div class="flow">
+        <span class="flow-step">결제·구독</span>
+        <span class="flow-step">커스텀 도메인</span>
+        <span class="flow-step">팀 계정·권한</span>
+        <span class="flow-step">내장 신청 폼</span>
+        <span class="flow-step">OG 메타 자동 생성</span>
+        <span class="flow-step">페이지 자동 만료</span>
+      </div>
+    </section>
+
+    <!-- 09 Decisions -->
+    <section class="slide" data-slide="9">
+      <div class="slide-label">Decision</div>
+      <h2>주요 의사결정 (ADR)</h2>
+      <table class="flex-1" style="margin-top:8px;">
+        <thead><tr><th>결정</th><th>대안</th><th>선택 이유</th></tr></thead>
+        <tbody>
+          <tr><td>JSON + 단일 렌더러</td><td>페이지마다 커스텀 HTML</td><td>유지보수 0, 템플릿 확장 용이</td></tr>
+          <tr><td>배포 시 로그인 필수</td><td>익명 배포 허용</td><td>페이지 소유·대시보드 일관성</td></tr>
+          <tr><td>트래킹을 대시보드로</td><td>공개 페이지에 로그 노출</td><td>운영자 UX·프라이버시</td></tr>
+          <tr><td>글꼴 드롭다운</td><td>전체 그리드 노출</td><td>편집 패널 공간·인지 부하 감소</td></tr>
+          <tr><td>로그인 모달</td><td>alert()</td><td>전환율·브랜드 톤 유지</td></tr>
+        </tbody>
+      </table>
+      <div class="quote mt-auto" style="margin-top:16px;">
+        코드는 Golden Path가 매끄럽게 동작하는 수준에서 <strong>의도적으로 중단</strong>했습니다. 범위 관리(scope discipline)가 포트폴리오의 핵심 메시지입니다.
+      </div>
+    </section>
+
+    <!-- 10 Competitive -->
+    <section class="slide" data-slide="10">
+      <div class="slide-label">Competitive</div>
+      <h2>경쟁·대안 분석</h2>
+      <table class="flex-1" style="margin-top:4px; font-size:11.5px;">
+        <thead><tr><th>대안</th><th>강점</th><th>약점</th><th>Quickpage 차별</th></tr></thead>
+        <tbody>
+          <tr><td>미리캔버스</td><td>디자인 자유도</td><td>배포·UTM 분리</td><td>폼 중심·즉시 /p/url 배포</td></tr>
+          <tr><td>노션·구글사이트</td><td>빠른 공유</td><td>랜딩·CTA 약함</td><td>이벤트 섹션·트래킹 내장</td></tr>
+          <tr><td>Framer·Webflow</td><td>고품질 사이트</td><td>비개발자에게 무거움</td><td>니치·속도·한국어 시나리오</td></tr>
+          <tr><td>외주 개발</td><td>완전 커스텀</td><td>비용·시간</td><td>셀프서비스·당일 수정</td></tr>
+        </tbody>
+      </table>
+      <div class="grid-4 mt-auto" style="margin-top:16px;">
+        <div class="card" style="padding:12px;"><h3 style="font-size:12px;">S</h3><p style="font-size:11px;">명확한 니치, 동작 프로토타입, 트래킹 일체</p></div>
+        <div class="card" style="padding:12px;"><h3 style="font-size:12px;">W</h3><p style="font-size:11px;">브랜드 인지 없음, 결제·도메인 미구현</p></div>
+        <div class="card" style="padding:12px;"><h3 style="font-size:12px;">O</h3><p style="font-size:11px;">소상공인·교육·이벤트 시장 성장</p></div>
+        <div class="card" style="padding:12px;"><h3 style="font-size:12px;">T</h3><p style="font-size:11px;">범용 툴의 랜딩 템플릿 강화</p></div>
+      </div>
+    </section>
+
+    <!-- 11 Pricing -->
+    <section class="slide" data-slide="11">
+      <div class="slide-label">Pricing</div>
+      <h2>요금제 기획</h2>
+      <p class="lead" style="margin-bottom:20px;">MVP 단계: 요금제는 <span class="highlight">가치 제안·포지셔닝</span> 표현. 실결제·리밋 강제는 Phase 2.</p>
+      <div class="grid-3 flex-1">
+        <div class="card">
+          <h3>Free</h3>
+          <p style="font-size:28px; font-weight:800; color:var(--accent-dark); margin:8px 0;">₩0</p>
+          <ul><li>처음 시작</li><li>공유 링크 배포</li><li>워터마크</li></ul>
+        </div>
+        <div class="card accent">
+          <h3>Pro</h3>
+          <p style="font-size:28px; font-weight:800; color:var(--accent-dark); margin:8px 0;">₩9,900<span style="font-size:14px;">/월</span></p>
+          <ul><li>워터마크 제거</li><li>전체 템플릿·분석</li><li>Low-code 수정</li></ul>
+        </div>
+        <div class="card">
+          <h3>Business</h3>
+          <p style="font-size:28px; font-weight:800; color:var(--accent-dark); margin:8px 0;">₩29,000<span style="font-size:14px;">/월</span></p>
+          <ul><li>팀·API</li><li>커스텀 도메인</li><li>대량 추출</li></ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12 Metrics -->
+    <section class="slide" data-slide="12">
+      <div class="slide-label">Metrics</div>
+      <h2>성공 지표 & 퍼널</h2>
+      <div class="grid-2 flex-1">
+        <div>
+          <h3>MVP 핵심 지표</h3>
+          <table style="margin-top:8px;">
+            <thead><tr><th>지표</th><th>목표</th></tr></thead>
+            <tbody>
+              <tr><td>첫 배포율 (24h)</td><td>≥ 30%</td></tr>
+              <tr><td>편집→배포 전환</td><td>≥ 40%</td></tr>
+              <tr><td>배포→공유율 (7일)</td><td>≥ 20%</td></tr>
+              <tr><td>재방문 편집 (7일)</td><td>≥ 15%</td></tr>
+              <tr><td>로그인 모달 전환</td><td>≥ 50%</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h3>퍼널</h3>
+          <div style="font-size:12px; line-height:2; color:var(--text-secondary); margin-top:8px;">
+            랜딩 방문<br />
+            &nbsp;&nbsp;→ 템플릿 선택<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;→ 편집 시작 (/create)<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 배포 시도<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ <span class="highlight">[비로그인] 로그인 모달</span><br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 배포 성공<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 트래킹 링크 생성<br />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;→ 외부 유입 (UTM)
+          </div>
+          <p style="font-size:12px; color:var(--text-muted); margin-top:12px;">
+            이탈 우선 개선: ① 편집→배포 ② 배포→트래킹 링크
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13 Roadmap -->
+    <section class="slide" data-slide="13">
+      <div class="slide-label">Roadmap</div>
+      <h2>로드맵 & 구현 현황</h2>
+      <div class="timeline">
+        <div class="phase done"><div class="phase-num">Phase 1</div><div class="phase-title">프로토타입</div><div class="phase-status">✅ 완료</div></div>
+        <div class="phase done"><div class="phase-num">Phase 2</div><div class="phase-title">가설 검증</div><div class="phase-status">✅ 완료</div></div>
+        <div class="phase done"><div class="phase-num">Phase 3</div><div class="phase-title">PMF 탐색</div><div class="phase-status">✅ 프로토타입</div></div>
+        <div class="phase planned"><div class="phase-num">Phase 4</div><div class="phase-title">수익화</div><div class="phase-status">📐 설계</div></div>
+        <div class="phase future"><div class="phase-num">Phase 5</div><div class="phase-title">B2B</div><div class="phase-status">🔮 Future</div></div>
+      </div>
+      <div class="grid-3 flex-1" style="margin-top:20px;">
+        <div class="card">
+          <span class="tag tag-green">✅ Implemented</span>
+          <ul style="margin-top:8px;">
+            <li>템플릿·편집기·배포</li>
+            <li>대시보드·트래킹</li>
+            <li>약관·정책 3종</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="tag tag-amber">📐 Designed</span>
+          <ul style="margin-top:8px;">
+            <li>플랜별 리밋</li>
+            <li>OG 메타·페이지 만료</li>
+            <li>페이지 복제</li>
+          </ul>
+        </div>
+        <div class="card">
+          <span class="tag tag-gray">🔮 Future</span>
+          <ul style="margin-top:8px;">
+            <li>Stripe 결제</li>
+            <li>커스텀 도메인</li>
+            <li>팀 계정·API</li>
+          </ul>
+        </div>
+      </div>
+      <p style="font-size:12px; color:var(--text-muted); margin-top:12px;">
+        다음 우선순위: 페이지 복제 + OG 메타 → 플랜 리밋 → 결제 → 커스텀 도메인
+      </p>
+    </section>
+
+    <!-- 14 Demo -->
+    <section class="slide" data-slide="14">
+      <div class="slide-label">Demo</div>
+      <h2>3분 데모 시나리오</h2>
+      <div class="grid-2 flex-1">
+        <div>
+          <table>
+            <thead><tr><th>시간</th><th>내용</th><th>화면</th></tr></thead>
+            <tbody>
+              <tr><td>0:00</td><td>문제 제시</td><td>/ 랜딩</td></tr>
+              <tr><td>0:20</td><td>템플릿 선택</td><td>/templates → /create</td></tr>
+              <tr><td>0:45</td><td>편집 & MO/PC 미리보기</td><td>/create</td></tr>
+              <tr><td>1:35</td><td>배포 & 로그인 모달</td><td>배포하기 → /p/{id}</td></tr>
+              <tr><td>2:15</td><td>UTM 트래킹 & 방문 로그</td><td>/dashboard</td></tr>
+              <tr><td>3:00</td><td>마무리 — Phase 2 설계 언급</td><td>문서 링크</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div>
+          <h3>예상 Q&A</h3>
+          <div class="card" style="margin-bottom:10px;">
+            <p><strong>미리캔버스와 뭐가 다른가요?</strong><br />범용 디자인 vs 이벤트 랜딩 10분 배포·UTM 니치</p>
+          </div>
+          <div class="card" style="margin-bottom:10px;">
+            <p><strong>왜 결제는 없나요?</strong><br />가설 검증 단계, 요금제는 포지셔닝·로드맵 문서화</p>
+          </div>
+          <div class="card">
+            <p><strong>기술은 직접 하셨나요?</strong><br />AI·Cursor 활용 프로토타입, 기획·범위·UX 의사결정이 초점</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 15 Retrospective -->
+    <section class="slide" data-slide="15">
+      <div class="slide-label">Retrospective</div>
+      <h2>회고</h2>
+      <div class="grid-2 flex-1">
+        <div>
+          <h3>잘한 점</h3>
+          <div class="card accent" style="margin-bottom:8px;"><p>니치 집중 — 「10분 이벤트 랜딩」스코프 축소</p></div>
+          <div class="card accent" style="margin-bottom:8px;"><p>Golden Path — 만들기→배포→트래킹 end-to-end</p></div>
+          <div class="card accent" style="margin-bottom:8px;"><p>범위 관리 — 결제·도메인·팀은 기획만</p></div>
+          <div class="card accent"><p>문서화 — PRD·로드맵·지표·데모로 차별</p></div>
+        </div>
+        <div>
+          <h3>배운 점 & 다음 단계</h3>
+          <ul style="font-size:13px; line-height:1.8; color:var(--text-secondary); padding-left:18px;">
+            <li>가설을 기능 목록이 아니라 <strong>퍼널</strong>로 쓴다</li>
+            <li>프로토타입은 「설득용 최소 완성도」</li>
+            <li>의도적 미구현도 기획 역량의 증거</li>
+            <li>전환 마찰 설계 — 배포 시점 로그인, 모달 톤</li>
+          </ul>
+          <h3 style="margin-top:16px;">다음 선택지</h3>
+          <div class="flow" style="margin-top:8px;">
+            <span class="flow-step">A. 포트폴리오 마무리</span>
+            <span class="flow-step">B. 5인 사용성 테스트</span>
+            <span class="flow-step">C. 제품 확장</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 16 Closing -->
+    <section class="slide slide-closing" data-slide="16">
+      <div class="slide-label">Thank You</div>
+      <h1>Quickpage</h1>
+      <p class="subtitle" style="text-align:center; max-width:480px;">
+        10분 안에 배포하는 이벤트 페이지<br />
+        기획서 + 동작 프로토타입
+      </p>
+      <div class="links">
+        <span class="link-item">PRD · ROADMAP · METRICS</span>
+        <span class="link-item">localhost:3000 데모</span>
+        <span class="link-item">docs/portfolio/</span>
+      </div>
+      <p style="margin-top:32px; font-size:13px; color:var(--text-muted);">질문해 주세요</p>
+    </section>
+
+  </div>
+</div>
+
+<nav class="nav-bar" aria-label="슬라이드 탐색">
+  <button class="nav-btn" id="prev" aria-label="이전">←</button>
+  <span class="slide-counter" id="counter">1 / 16</span>
+  <button class="nav-btn" id="next" aria-label="다음">→</button>
+</nav>
+
+<script>
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  const counter = document.getElementById('counter');
+  const progress = document.getElementById('progress');
+  const prevBtn = document.getElementById('prev');
+  const nextBtn = document.getElementById('next');
+
+  function goTo(index) {
+    if (index < 0 || index >= total) return;
+    slides[current].classList.remove('active');
+    current = index;
+    slides[current].classList.add('active');
+    counter.textContent = `${current + 1} / ${total}`;
+    progress.style.width = `${((current + 1) / total) * 100}%`;
+    prevBtn.disabled = current === 0;
+    nextBtn.disabled = current === total - 1;
+  }
+
+  prevBtn.addEventListener('click', () => goTo(current - 1));
+  nextBtn.addEventListener('click', () => goTo(current + 1));
+
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+      e.preventDefault();
+      goTo(current + 1);
+    } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+      e.preventDefault();
+      goTo(current - 1);
+    } else if (e.key === 'Home') {
+      goTo(0);
+    } else if (e.key === 'End') {
+      goTo(total - 1);
+    }
+  });
+
+  let touchStartX = 0;
+  document.getElementById('viewport').addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+  }, { passive: true });
+  document.getElementById('viewport').addEventListener('touchend', (e) => {
+    const diff = touchStartX - e.changedTouches[0].screenX;
+    if (Math.abs(diff) > 50) goTo(diff > 0 ? current + 1 : current - 1);
+  }, { passive: true });
+
+  goTo(0);
+</script>
+</body>
+</html>

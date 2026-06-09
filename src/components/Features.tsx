@@ -46,7 +46,7 @@ export default function Features() {
             이벤트 페이지에 필요한 모든 기능
           </h2>
           <p className="mt-3 text-gray-500">
-            무겁고 느린 툴은 이제 그만. 퀵페이지는 빠르고 가볍습니다.
+            무겁고 느린 툴은 이제 그만. Quickpage는 빠르고 가볍습니다.
           </p>
         </div>
 

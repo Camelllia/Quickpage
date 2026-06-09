@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 import AuthButton from "@/components/AuthButton";
+import { BRAND_NAME } from "@/lib/brand";
 
 const navItems = [
   { label: "템플릿", href: "/templates" },
@@ -21,8 +22,9 @@ export default function Header() {
             Q
           </span>
           <span className="text-lg font-bold text-gray-900">
-            퀵<span className="text-[#ff4d6d]">페이지</span>
+            Quick<span className="text-[#ff4d6d]">page</span>
           </span>
+          <span className="sr-only">{BRAND_NAME}</span>
         </Link>
 
         <nav className="hidden items-center gap-8 md:flex">

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { BRAND_NAME } from "./brand";
 import type { PageData } from "./types";
 
 const DEFAULT_OG_IMAGE = "/og-default.png";
@@ -23,18 +24,18 @@ export function buildPageMetadata(
   siteUrl = getSiteUrl(),
 ): Metadata {
   const title = page.title;
-  const description = page.subtitle || page.description?.slice(0, 160) || "퀵페이지로 만든 이벤트 페이지";
+  const description = page.subtitle || page.description?.slice(0, 160) || `${BRAND_NAME}로 만든 이벤트 페이지`;
   const pageUrl = `${siteUrl}/p/${pageId}`;
   const imageUrl = toAbsoluteUrl(page.bannerUrl, siteUrl);
 
   return {
-    title: `${title} | 퀵페이지`,
+    title: `${title} | ${BRAND_NAME}`,
     description,
     openGraph: {
       title,
       description,
       url: pageUrl,
-      siteName: "퀵페이지",
+      siteName: BRAND_NAME,
       locale: "ko_KR",
       type: "website",
       images: [

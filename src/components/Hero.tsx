@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BRAND_NAME } from "@/lib/brand";
 
 export default function Hero() {
   return (
@@ -14,7 +15,7 @@ export default function Hero() {
 
         <h1 className="animate-fade-up mx-auto max-w-4xl text-4xl font-extrabold leading-tight tracking-tight text-gray-900 sm:text-5xl lg:text-6xl" style={{ animationDelay: "0.1s" }}>
           세상의 모든 이벤트 페이지는{" "}
-          <span className="gradient-text">퀵페이지</span>로 완성
+          <span className="gradient-text">{BRAND_NAME}</span>로 완성
         </h1>
 
         <p className="animate-fade-up mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-gray-500 sm:text-xl" style={{ animationDelay: "0.2s" }}>

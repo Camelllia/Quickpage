@@ -36,6 +36,9 @@ npm run dev:clean   # 캐시 오류 시 권장
 | `/dashboard` | 내 페이지 관리 |
 | `/p/[id]` | 배포된 페이지 (UUID, 중복 없음) |
 | `/login` `/signup` | 로그인·회원가입 (Supabase) |
+| `/terms` | 서비스 이용 약관 |
+| `/privacy` | 개인정보처리방침 |
+| `/guidelines` | 운영 정책 및 가이드라인 |
 
 ## 페이지 저장 & 배포
 

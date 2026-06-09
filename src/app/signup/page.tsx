@@ -3,7 +3,9 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AuthForm from "@/components/AuthForm";
 
-export const metadata = { title: "회원가입 | 퀵페이지" };
+import { BRAND_NAME } from "@/lib/brand";
+
+export const metadata = { title: `회원가입 | ${BRAND_NAME}` };
 
 export default async function SignupPage({
   searchParams,

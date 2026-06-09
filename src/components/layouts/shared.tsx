@@ -288,7 +288,7 @@ export function PageWatermark({
   return (
     <div className={`border-t py-4 text-center ${dark ? "border-white/10" : "border-gray-100 bg-gray-50"}`}>
       <Link href="/" className="text-sm text-gray-400 hover:text-[#ff4d6d]">
-        Made by QuickPage →
+        Made by Quickpage →
       </Link>
     </div>
   );

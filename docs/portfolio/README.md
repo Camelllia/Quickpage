@@ -15,6 +15,7 @@
 | [METRICS.md](./METRICS.md) | 성공 지표·가설 검증 프레임워크 |
 | [COMPETITIVE.md](./COMPETITIVE.md) | 경쟁·대안 비교 |
 | [RETROSPECTIVE.md](./RETROSPECTIVE.md) | 회고 — 배운 점, 다음 단계 |
+| [presentation.html](./presentation.html) | PPT형 HTML 포트폴리오 슬라이드 (16장) |
 
 ---
 

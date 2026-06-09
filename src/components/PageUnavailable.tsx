@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { BRAND_NAME } from "@/lib/brand";
 import type { PageBlockReason } from "@/lib/page-lifecycle";
 import { blockReasonMessage } from "@/lib/page-lifecycle";
 
@@ -18,7 +19,7 @@ export default function PageUnavailable({ reason }: { reason: PageBlockReason })
         href="/"
         className="mt-4 rounded-full bg-[#ff4d6d] px-5 py-2 text-sm font-semibold text-white hover:bg-[#e63956]"
       >
-        퀵페이지 홈으로
+        {BRAND_NAME} 홈으로
       </Link>
     </div>
   );

@@ -1,9 +1,10 @@
 import Header from "@/components/Header";
+import { BRAND_NAME } from "@/lib/brand";
 import Footer from "@/components/Footer";
 import DashboardContent from "@/components/DashboardContent";
 
 export const metadata = {
-  title: "대시보드 | 퀵페이지",
+  title: `대시보드 | ${BRAND_NAME}`,
 };
 
 export default function DashboardPage() {

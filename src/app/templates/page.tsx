@@ -2,9 +2,10 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import TemplateCard from "@/components/TemplateCard";
 import { templates } from "@/lib/data";
+import { BRAND_NAME } from "@/lib/brand";
 
 export const metadata = {
-  title: "템플릿 | 퀵페이지",
+  title: `템플릿 | ${BRAND_NAME}`,
   description: "이벤트, 모집, 공지, 세일 등 단기 마케팅에 최적화된 템플릿",
 };
 

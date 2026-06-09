@@ -1,5 +1,7 @@
 import Link from "next/link";
+import { BRAND_NAME } from "@/lib/brand";
 import { SAMPLE_PAGE_IDS } from "@/lib/data";
+import { LEGAL_CONTACT_EMAIL } from "@/lib/legal/constants";
 
 export default function Footer() {
   return (
@@ -11,7 +13,10 @@ export default function Footer() {
               <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-gradient-to-br from-[#ff4d6d] to-[#7c3aed] text-sm font-bold text-white">
                 Q
               </span>
-              <span className="text-lg font-bold text-gray-900">퀵페이지</span>
+              <span className="text-lg font-bold text-gray-900">
+                Quick<span className="text-[#ff4d6d]">page</span>
+              </span>
+              <span className="sr-only">{BRAND_NAME}</span>
             </Link>
             <p className="mt-3 text-sm leading-relaxed text-gray-500">
               10분 안에 배포하는 이벤트 페이지.
@@ -30,11 +35,12 @@ export default function Footer() {
           </div>
 
           <div>
-            <h4 className="mb-3 text-sm font-semibold text-gray-900">지원</h4>
+            <h4 className="mb-3 text-sm font-semibold text-gray-900">약관 및 정책</h4>
             <ul className="space-y-2 text-sm text-gray-500">
-              <li><a href="#" className="hover:text-[#ff4d6d]">이용약관</a></li>
-              <li><a href="#" className="hover:text-[#ff4d6d]">개인정보 처리방침</a></li>
-              <li><a href="#" className="hover:text-[#ff4d6d]">고객센터</a></li>
+              <li><Link href="/terms" className="hover:text-[#ff4d6d]">서비스 이용 약관</Link></li>
+              <li><Link href="/privacy" className="hover:text-[#ff4d6d]">개인정보처리방침</Link></li>
+              <li><Link href="/guidelines" className="hover:text-[#ff4d6d]">운영 정책 및 가이드라인</Link></li>
+              <li><a href={`mailto:${LEGAL_CONTACT_EMAIL}`} className="hover:text-[#ff4d6d]">고객센터</a></li>
             </ul>
           </div>
 
@@ -48,7 +54,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-10 border-t border-gray-200 pt-6 text-center text-xs text-gray-400">
-          © 2026 QuickPage. All rights reserved.
+          © 2026 {BRAND_NAME}. All rights reserved.
         </div>
       </div>
     </footer>
